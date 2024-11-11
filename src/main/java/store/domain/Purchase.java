@@ -37,6 +37,9 @@ public class Purchase{
     public Product getProduct(){
         return this.product;
     }
+    public int getPrice(){
+        return this.price;
+    }
     public String getProductName(){
         return this.product.getProductName();
     }

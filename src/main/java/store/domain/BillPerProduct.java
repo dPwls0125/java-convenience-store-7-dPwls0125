@@ -3,24 +3,27 @@ package store.domain;
 import store.dto.BillPerProductDto;
 
 public class BillPerProduct {
-    private String productName;
-
-    private int totalQuantity;
+    Purchase purchase;
     private int giveAwayQuantity;
     private int quantityInPromotion;
     private int quantityInOriginal;
     private int priceInPromotion;
     private int totalPrice;
 
-    public BillPerProduct(String productName, int giveAwayQuantity,
+    public BillPerProduct(Purchase purchase, int giveAwayQuantity,
                           int quantityInPromotion, int quantityInOriginal,
                           int priceInPromotion, int totalPrice) {
-        this.productName = productName;
+
+        this.purchase = purchase;
         this.giveAwayQuantity = giveAwayQuantity;
         this.quantityInPromotion = quantityInPromotion;
         this.quantityInOriginal = quantityInOriginal;
         this.priceInPromotion = priceInPromotion;
         this.totalPrice = totalPrice;
+    }
+
+    public int getGiveAwayQuantity() {
+        return giveAwayQuantity;
     }
 
     public int getQuantityInPromotion() {
@@ -39,7 +42,11 @@ public class BillPerProduct {
         return totalPrice;
     }
 
-    public static BillPerProduct of(String productName, BillPerProductDto dto){
-        return new BillPerProduct(productName, dto.getTotalGiveAwayQuantity(), dto.getQuantityInPromotion(), dto.getQuantityInOriginal(), dto.getPriceInPromotion(), dto.getTotalPrice());
+    public Purchase getPurchase() {
+        return purchase;
+    }
+
+    public static BillPerProduct of(Purchase purchase, BillPerProductDto dto){
+        return new BillPerProduct(purchase, dto.getTotalGiveAwayQuantity(), dto.getQuantityInPromotion(), dto.getQuantityInOriginal(), dto.getPriceInPromotion(), dto.getTotalPrice());
     }
 }

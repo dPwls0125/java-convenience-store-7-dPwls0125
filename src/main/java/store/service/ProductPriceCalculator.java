@@ -4,7 +4,7 @@ import store.domain.Product;
 import store.domain.Promotion;
 import store.dto.BillPerProductDto;
 
-public class PriceCalculator {
+public class ProductPriceCalculator {
 
     public BillPerProductDto getBillsPerProduct(int quantity, Promotion promotion, Product product){
 

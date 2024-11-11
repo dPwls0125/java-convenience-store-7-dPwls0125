@@ -1,9 +1,8 @@
 package store.domain;
 
-import store.constant.PurchaseErrorMessage;
 import store.dto.BillPerProductDto;
 import store.exception.PurchaseException;
-import store.service.PriceCalculator;
+import store.service.ProductPriceCalculator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +12,8 @@ import static store.constant.PurchaseErrorMessage.OUT_OF_STOCK;
 public class Customer {
     private List<Purchase> purchases = new ArrayList<Purchase>();
     private List<BillPerProduct> billPerProducts = new ArrayList<BillPerProduct>();
-    private final PriceCalculator priceCalculator = new PriceCalculator();
+    private boolean applicateMembership;
+    private final ProductPriceCalculator productPriceCalculator = new ProductPriceCalculator();
 
     public void addPurchase(Purchase purchase) {
         checkDuplicatePurchase(purchase);
@@ -28,8 +28,8 @@ public class Customer {
     private void addBillPerProducts(Purchase purchase) {
         Product product = purchase.getProduct();
         Promotion promotion = product.getPromotion();
-        BillPerProductDto dto = priceCalculator.getBillsPerProduct(purchase.getQuantity(), promotion, product);
-        BillPerProduct billPerProduct = BillPerProduct.of(product.getProductName(),dto);
+        BillPerProductDto dto = productPriceCalculator.getBillsPerProduct(purchase.getQuantity(), promotion, product);
+        BillPerProduct billPerProduct = BillPerProduct.of(purchase,dto);
         billPerProducts.add(billPerProduct);
     }
 
@@ -41,4 +41,15 @@ public class Customer {
         }
     }
 
+    public List<BillPerProduct> getBillPerProducts() {
+        return billPerProducts;
+    }
+
+    public boolean isApplicateMembership() {
+        return applicateMembership;
+    }
+
+    public void setApplicateMembership(boolean applicateMembership) {
+        this.applicateMembership = applicateMembership;
+    }
 }
