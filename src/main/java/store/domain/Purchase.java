@@ -1,5 +1,8 @@
 package store.domain;
 
+import store.constant.PurchaseErrorMessage;
+import store.exception.PurchaseException;
+
 public class Purchase{
     private String productName;
     private int quantity;
@@ -16,7 +19,7 @@ public class Purchase{
 
     private void validateQuantity(int quantity){
         if(quantity <= 0){
-            throw new IllegalArgumentException("[Error] 구매 수량은 1이상이어야 합니다.");
+            throw PurchaseException.from(PurchaseErrorMessage.INVALID_QUANTITY);
         }
     }
 
@@ -24,7 +27,7 @@ public class Purchase{
         return quantity;
     }
 
-    public String getPrice(){
+    public String getProductName(){
         return this.productName;
     }
 }

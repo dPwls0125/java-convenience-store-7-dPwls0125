@@ -28,5 +28,4 @@ public class PurchaseTest {
             new Purchase("콩나물", 0);
         });
     }
-
 }

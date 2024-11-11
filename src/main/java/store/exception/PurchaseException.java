@@ -1,13 +1,15 @@
 package store.exception;
 
-import store.constant.ErrorMessage;
+import store.constant.PurchaseErrorMessage;
 
-public class PurchaseException extends IllegalArgumentException{
-    public PurchaseException(final ErrorMessage errorMessage){
-        super(errorMessage.getMessage());
+public class PurchaseException extends IllegalArgumentException {
+
+    public PurchaseException(final PurchaseErrorMessage purchaseErrorMessage) {
+        super(purchaseErrorMessage.getMessage());
     }
 
-    public static PurchaseException from(final ErrorMessage errorMessage){
-        return new PurchaseException(errorMessage);
+    public static PurchaseException from(final PurchaseErrorMessage purchaseErrorMessage) {
+        return new PurchaseException(purchaseErrorMessage);
     }
+
 }
