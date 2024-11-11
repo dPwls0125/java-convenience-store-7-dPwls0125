@@ -43,7 +43,19 @@ public class ProductPriceCalculator {
         return extraQuantity * product.getPrice();
     }
 
-    private int calculateQuantityInSetOfPromotion(int purchaseAmount, int extraAmount){
+    public Integer calculateQuantityInSetOfPromotion(int purchaseAmount, int extraAmount){
         return extraAmount + purchaseAmount;
     }
+
+    public int calculatePromotionBonus(Promotion promotion, int quantity) {
+        int purchaseAmount = promotion.getPurchaseAmount();
+        int extraAmount = promotion.getExtraAmount();
+
+        // 적용 가능한 프로모션 횟수를 계산
+        int promotionApplies = quantity / purchaseAmount;
+
+        // 추가로 받을 수 있는 수량 계산
+        return promotionApplies * extraAmount;
+    }
+
 }

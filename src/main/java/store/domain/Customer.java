@@ -18,17 +18,24 @@ public class Customer {
     public void addPurchase(Purchase purchase) {
         checkDuplicatePurchase(purchase);
         purchases.add(purchase);
-        addBillPerProducts(purchase);
+        addBillPerProductsForPromotion(purchase);
     }
 
     public List<Purchase> getPurchases() {
         return purchases;
     }
 
-    private void addBillPerProducts(Purchase purchase) {
+    public void addBillPerProductsForPromotion(Purchase purchase) {
         Product product = purchase.getProduct();
         Promotion promotion = product.getPromotion();
         BillPerProductDto dto = productPriceCalculator.getBillsPerProduct(purchase.getQuantity(), promotion, product);
+        BillPerProduct billPerProduct = BillPerProduct.of(purchase,dto);
+        billPerProducts.add(billPerProduct);
+    }
+
+    public void addBillPerProductsForNonPromotion(Purchase purchase) {
+        Product product = purchase.getProduct();
+        BillPerProductDto dto = BillPerProductDto.of(0, 0, purchase.getQuantity(), 0, product.getPrice() * purchase.getQuantity());
         BillPerProduct billPerProduct = BillPerProduct.of(purchase,dto);
         billPerProducts.add(billPerProduct);
     }

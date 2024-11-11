@@ -12,7 +12,7 @@ public class Purchase{
         return new Purchase(product, quantity);
     }
 
-    private  Purchase(Product product, int quantity){
+    private Purchase(Product product, int quantity){
         this.product = product;
         this.quantity = quantity;
         validate(product.getProductName(), quantity);

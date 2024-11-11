@@ -16,11 +16,7 @@ public class DisplayInventoryView {
         PRONOUNCE_MENU("현재 보유하고 있는 상품입니다."),
         NON_PROMOTION_PRODUCT_STORAGE_INFO("- %s %s원 %s"),
         PROMOTION_PRODUCT_STORAGE_INFO("- %s %s원 %s %s"),
-        DEPLETED_PRODUCT("재고 없음")
-        ;
-
-
-
+        DEPLETED_PRODUCT("재고 없음");
         private String message;
 
         Inventory(String message){
@@ -55,6 +51,7 @@ public class DisplayInventoryView {
             printBothOfNonPromotionAndPromotion(product);
         }
     }
+
 
     private void printBothOfNonPromotionAndPromotion(Product product) {
 
