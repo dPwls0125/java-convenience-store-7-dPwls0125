@@ -4,13 +4,21 @@ import store.constant.PurchaseErrorMessage;
 import store.exception.PurchaseException;
 
 public class Purchase{
-    private String productName;
+    private Product product;
     private int quantity;
+    private int price;
 
-    public Purchase(String productName, int quantity){
-        this.productName = productName;
+    public Purchase(Product product, int quantity){
+        this.product = product;
         this.quantity = quantity;
-        validate(productName, quantity);
+        validate(product.getProductName(), quantity);
+        this.price = product.getPrice() * quantity;
+    }
+
+    private void validateQuantityStock(int quantity){
+        if(quantity > product.getNonPromotionQuantity() + product.getPromotionQuantity()){
+            throw PurchaseException.from(PurchaseErrorMessage.OUT_OF_STOCK);
+        }
     }
 
     private void validate(String productName, int quantity){
@@ -26,8 +34,10 @@ public class Purchase{
     public int getQuantity(){
         return quantity;
     }
-
+    public Product getProduct(){
+        return this.product;
+    }
     public String getProductName(){
-        return this.productName;
+        return this.product.getProductName();
     }
 }

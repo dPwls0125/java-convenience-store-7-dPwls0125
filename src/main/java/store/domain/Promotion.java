@@ -38,4 +38,13 @@ public class Promotion {
             throw PromotionException.from(PromotionErrorMessage.ALREADY_TERMINATED_PROMOTION);
         }
     }
+
+    public int getExtraAmount(){
+        return this.extraAmount;
+    }
+
+    public int getPurchaseAmount(){
+        return this.purchaseAmount;
+    }
+
 }

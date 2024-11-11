@@ -19,7 +19,34 @@ public class Product {
         return this.name;
     }
 
+    public int getPrice(){
+        return this.price;
+    }
+    public int getPromotionQuantity(){
+        return this.promotionQuantity;
+    }
+
+    public void setNonPromotionQuantity(int quantity){
+        this.nonPromotionQuantity = quantity;
+    }
+
+    public void setPromotionQuantity(int quantity){
+        this.promotionQuantity = quantity;
+    }
+
     public boolean hasPromotion(){
         return promotion != null;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getNonPromotionQuantity() {
+        return nonPromotionQuantity;
+    }
+
+    public Promotion getPromotion() {
+        return promotion;
     }
 }

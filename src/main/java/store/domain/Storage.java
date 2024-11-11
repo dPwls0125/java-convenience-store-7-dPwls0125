@@ -3,7 +3,6 @@ package store.domain;
 import store.constant.ProductErrorMessage;
 import store.exception.ProductException;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +10,7 @@ public class Storage {
     Map<String, Product> products = new HashMap<>();
 
     public void addProduct(String productName, Product product){
-        contatins(productName);
+        checkProductNameDuplicated(productName);
         products.put(productName, product);
     }
 
@@ -19,11 +18,18 @@ public class Storage {
         products.remove(productName);
     }
 
-    public void productsClear(){
-        products.clear();
+    public void getProduct(){
+        for(String key : products.keySet()){
+            System.out.println(products.get(key).getProductName());
+        }
     }
 
-    public void contatins(String productName){
+    private void isProductExist(String productName){
+        if(!products.containsKey(productName))
+            throw ProductException.from(ProductErrorMessage.NOT_EXIST_PRODUCT);
+    }
+
+    public void checkProductNameDuplicated(String productName){
         if(products.containsKey(productName)){
             throw ProductException.from(ProductErrorMessage.DUBLICATION_PRODUCT_NAME);
         }
