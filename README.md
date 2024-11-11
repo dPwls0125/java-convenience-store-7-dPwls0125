@@ -1,6 +1,6 @@
 # java-convenience-store-precourse
 
-## 📝 기능 요구사항
+## 📝기능 요구사항
 
 
 - [] 프로모션 안내 및 재고 안내
