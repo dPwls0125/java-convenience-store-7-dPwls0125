@@ -2,17 +2,18 @@ package store.service;
 
 import store.domain.BillPerProduct;
 import store.dto.TotalBillDto;
-
 import java.util.List;
 
 public class ProductsPriceCalculator {
 
     public TotalBillDto getTotalBillDTo(List<BillPerProduct>bills, boolean membership){
+
         int totalQuantity = calculateTotalQuantity(bills);
         int totalPrice = calculateTotalQuantity(bills);
         int totalPromotionDiscount = calculateTotalPromotionDiscount(bills);
         int memberShipDiscount = membership ? calculateMemershipDiscount(totalPrice,totalPromotionDiscount) : 0;
         int finalPrice = calculateFinalPrice(bills);
+
         return TotalBillDto.of(totalQuantity, totalPrice,totalPromotionDiscount, memberShipDiscount, finalPrice);
     }
 

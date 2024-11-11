@@ -6,6 +6,8 @@ import store.domain.Promotions;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class PromotionConfig {
     public static InputStream inputStream = PromotionConfig.class.getClassLoader().getResourceAsStream("promotions.md");
@@ -20,8 +22,8 @@ public class PromotionConfig {
                 String name = details[0];
                 int buyAmount = Integer.parseInt(details[1]);
                 int extraAmount = Integer.parseInt(details[2]);
-                LocalDate startDate = LocalDate.parse(details[3]);
-                LocalDate endDate = LocalDate.parse(details[4]);
+                LocalDateTime startDate = LocalDate.parse(details[3]).atStartOfDay();
+                LocalDateTime endDate = LocalDate.parse(details[4]).atTime(LocalTime.MAX);
 
                 Promotion promotion = new Promotion(name, buyAmount, extraAmount, startDate, endDate);
                 promotions.addPromotion(name, promotion);

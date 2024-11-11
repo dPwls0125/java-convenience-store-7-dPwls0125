@@ -17,7 +17,7 @@ public class ProductPriceCalculator {
         return BillPerProductDto.of(totalGiveAwayQuantity, quantityInPromotion, quantityInOriginal, discount, totalPrice);
     }
 
-    private int calculatePurchaseQuantityInPromotion(Promotion promotion, Product product) {
+    public int calculatePurchaseQuantityInPromotion(Promotion promotion, Product product) {
         int promotionPurchaseAmount = promotion.getPurchaseAmount();
         int promotionExtraAmount = promotion.getExtraAmount();
         int setForPromotion = availableSetInPromotionStock(product.getPromotionQuantity(), promotionPurchaseAmount, promotionExtraAmount);

@@ -10,8 +10,5 @@ public class Application {
         DisplayInventoryView displayInventoryView = new DisplayInventoryView(storage);
         displayInventoryView.displayInventoryView();
 
-
-
-
     }
 }

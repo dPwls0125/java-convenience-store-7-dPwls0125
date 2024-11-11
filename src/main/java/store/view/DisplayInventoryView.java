@@ -14,8 +14,12 @@ public class DisplayInventoryView {
     enum Inventory{
         WELCOME("안녕하세요. W편의점입니다."),
         PRONOUNCE_MENU("현재 보유하고 있는 상품입니다."),
-        NON_PROMOTION_PRODUCT_STORAGE_INFO("- %s %s원 %d개"),
-        PROMOTION_PRODUCT_STORAGE_INFO("- %s %s원 %d개 %s");
+        NON_PROMOTION_PRODUCT_STORAGE_INFO("- %s %s원 %s"),
+        PROMOTION_PRODUCT_STORAGE_INFO("- %s %s원 %s %s"),
+        DEPLETED_PRODUCT("재고 없음")
+        ;
+
+
 
         private String message;
 
@@ -55,15 +59,21 @@ public class DisplayInventoryView {
     private void printBothOfNonPromotionAndPromotion(Product product) {
 
         String price = numberFormat.format(product.getPrice());
-
         if (product.hasPromotion()) {
             Promotion promotion = product.getPromotion();
-            System.out.println(PROMOTION_PRODUCT_STORAGE_INFO.formatMessage(product.getProductName(), price, product.getPromotionQuantity(),promotion.getPromotionName()));
+            String quantity = fomatQuantity(product.getPromotionQuantity());
+            System.out.println(PROMOTION_PRODUCT_STORAGE_INFO.formatMessage(product.getProductName(), price, quantity,promotion.getPromotionName()));
         }
         if(product.getNonPromotionQuantity() != null){
-            System.out.println(NON_PROMOTION_PRODUCT_STORAGE_INFO.formatMessage(product.getProductName(),price, product.getNonPromotionQuantity()));
+            String quantity = fomatQuantity(product.getNonPromotionQuantity());
+            System.out.println(NON_PROMOTION_PRODUCT_STORAGE_INFO.formatMessage(product.getProductName(),price,quantity));
         }
     }
 
-
+    private String fomatQuantity(int quantity){
+        if(quantity == 0){
+            return DEPLETED_PRODUCT.getMessage();
+        }
+        return String.valueOf(quantity)+"개";
+    }
 }

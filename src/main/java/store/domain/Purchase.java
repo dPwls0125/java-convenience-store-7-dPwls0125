@@ -8,7 +8,11 @@ public class Purchase{
     private int quantity;
     private int price;
 
-    public Purchase(Product product, int quantity){
+    public static Purchase of(Product product, int quantity){
+        return new Purchase(product, quantity);
+    }
+
+    private  Purchase(Product product, int quantity){
         this.product = product;
         this.quantity = quantity;
         validate(product.getProductName(), quantity);

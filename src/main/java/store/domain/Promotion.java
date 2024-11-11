@@ -1,19 +1,21 @@
 package store.domain;
 
+import camp.nextstep.edu.missionutils.DateTimes;
 import net.bytebuddy.asm.Advice;
 import store.constant.PromotionErrorMessage;
 import store.exception.PromotionException;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Promotion {
     private final String promotionName;
     private int purchaseAmount;
     private int extraAmount;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
 
-    public Promotion(String promotionName, int purchaseAmount, int extraAmount, LocalDate startDate, LocalDate endDate) {
+    public Promotion(String promotionName, int purchaseAmount, int extraAmount, LocalDateTime startDate, LocalDateTime endDate) {
         this.promotionName = promotionName;
         this.purchaseAmount = purchaseAmount;
         this.extraAmount = extraAmount;
@@ -34,7 +36,7 @@ public class Promotion {
     }
 
     public void validateDate(){
-        if(this.endDate.isBefore(LocalDate.now())){
+        if(this.endDate.isBefore(DateTimes.now())){
             throw PromotionException.from(PromotionErrorMessage.ALREADY_TERMINATED_PROMOTION);
         }
     }
