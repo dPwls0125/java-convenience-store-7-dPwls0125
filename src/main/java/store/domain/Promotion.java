@@ -33,13 +33,9 @@ public class Promotion {
         }
     }
 
-    private void validateDate(){
+    public void validateDate(){
         if(this.endDate.isBefore(LocalDate.now())){
             throw PromotionException.from(PromotionErrorMessage.ALREADY_TERMINATED_PROMOTION);
         }
     }
-
-
-
-
 }

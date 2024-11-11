@@ -1,5 +1,8 @@
 package store.domain;
 
+import store.constant.PromotionErrorMessage;
+import store.exception.PromotionException;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,8 +17,16 @@ public class Promotions {
         promotions.remove(PromotionName);
     }
 
-    public void cointainsPromotion(String PromotionName){
-        promotions.containsKey(PromotionName);
+    public void cointains(String PromotionName){
+        if(!promotions.containsKey(PromotionName)){
+            throw PromotionException.from(PromotionErrorMessage.INVALID_PROMOTION_NAME);
+        }
     }
 
+    public Promotion getValidPromotion(String PromotionName){
+        cointains(PromotionName);
+        Promotion promotion = promotions.get(PromotionName);
+        promotion.validateDate();
+        return promotion;
+    }
 }
