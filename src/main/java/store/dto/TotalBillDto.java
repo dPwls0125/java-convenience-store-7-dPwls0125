@@ -1,18 +1,20 @@
 package store.dto;
 
 public class TotalBillDto {
+    private int totalQuantity;
     private int totalPrice;
     private int totalPromotionDiscount;
     private int memberShipDiscount;
     private int finalPrice;
-    private TotalBillDto(int totalPrice, int totalPromotionDiscount, int memberShipDiscount, int finalPrice) {
+    private TotalBillDto(int totalQuantity,int totalPrice, int totalPromotionDiscount, int memberShipDiscount, int finalPrice) {
+        this.totalQuantity = totalQuantity;
         this.totalPrice = totalPrice;
         this.totalPromotionDiscount = totalPromotionDiscount;
         this.memberShipDiscount = memberShipDiscount;
         this.finalPrice = finalPrice;
     }
-    public static TotalBillDto of(int totalPrice, int totalPromotionDiscount, int memberShipDiscount, int finalPrice){
-        return new TotalBillDto(totalPrice, totalPromotionDiscount, memberShipDiscount, finalPrice);
+    public static TotalBillDto of(int totalQuantity,int totalPrice, int totalPromotionDiscount, int memberShipDiscount, int finalPrice){
+        return new TotalBillDto(totalQuantity,totalPrice, totalPromotionDiscount, memberShipDiscount, finalPrice);
     }
 
     public int getTotalPrice() {
@@ -45,5 +47,13 @@ public class TotalBillDto {
 
     public void setFinalPrice(int finalPrice) {
         this.finalPrice = finalPrice;
+    }
+
+    public int getTotalQuantity() {
+        return totalQuantity;
+    }
+
+    public void setTotalQuantity(int totalQuantity) {
+        this.totalQuantity = totalQuantity;
     }
 }

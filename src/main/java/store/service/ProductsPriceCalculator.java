@@ -8,13 +8,19 @@ import java.util.List;
 public class ProductsPriceCalculator {
 
     public TotalBillDto getTotalBillDTo(List<BillPerProduct>bills, boolean membership){
-        int totalPrice = calculateTotalPrice(bills);
+        int totalQuantity = calculateTotalQuantity(bills);
+        int totalPrice = calculateTotalQuantity(bills);
         int totalPromotionDiscount = calculateTotalPromotionDiscount(bills);
-        int memberShipDiscount = membership ? memershipDiscount(totalPrice,totalPromotionDiscount) : 0;
-        int finalPrice = totalPrice - totalPromotionDiscount - memberShipDiscount;
-        return TotalBillDto.of(totalPrice, totalPromotionDiscount, memberShipDiscount, finalPrice);
+        int memberShipDiscount = membership ? calculateMemershipDiscount(totalPrice,totalPromotionDiscount) : 0;
+        int finalPrice = calculateFinalPrice(bills);
+        return TotalBillDto.of(totalQuantity, totalPrice,totalPromotionDiscount, memberShipDiscount, finalPrice);
     }
 
+    private int calculateTotalQuantity(List<BillPerProduct> bills){
+        return bills.stream()
+                .mapToInt(bill -> bill.getPurchase().getQuantity())
+                .sum();
+    }
     private int calculateTotalPromotionDiscount(List<BillPerProduct> bills){
         return bills.stream()
                 .mapToInt(BillPerProduct::getPriceInPromotion)
@@ -25,10 +31,10 @@ public class ProductsPriceCalculator {
                 .mapToInt(bill -> bill.getPurchase().getPrice())
                 .sum();
     }
-    private int finalPrice(List<BillPerProduct> bills){
+    private int calculateFinalPrice(List<BillPerProduct> bills){
         return calculateTotalPrice(bills) - calculateTotalPromotionDiscount(bills);
     }
-    private int memershipDiscount(int totalPrice, int totalPromotionDiscount){
+    private int calculateMemershipDiscount(int totalPrice, int totalPromotionDiscount){
         int discount = (int) (totalPrice * 0.3);
         if(discount > 8000){
             return 8000;

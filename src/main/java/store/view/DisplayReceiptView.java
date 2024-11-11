@@ -51,6 +51,7 @@ public class DisplayReceiptView {
         List<BillPerProduct> billPerProducts = customer.getBillPerProducts();
         printPurchasedProductInfos(products);
         printGiveAway(billPerProducts);
+        printResult(billPerProducts);
     }
 
     private void printPurchasedProductInfos(List<Purchase> purchases) {
@@ -72,7 +73,6 @@ public class DisplayReceiptView {
     }
 
     private void checkAndPrintGiveAwayQuantityPerProduct(BillPerProduct bill, Purchase purchase) {
-        List<>
         if(bill.getGiveAwayQuantity() > 0) {
             System.out.println(GIVEAWAY_COLUMN.format(purchase.getProductName(), bill.getGiveAwayQuantity()));
         }
@@ -80,8 +80,9 @@ public class DisplayReceiptView {
     private void printResult(List<BillPerProduct> billPerProducts) {
         TotalBillDto totalBillDto = productsPriceCalculator.getTotalBillDTo(billPerProducts, customer.isApplicateMembership());
         System.out.println(END_RECEIPT_DIVIDER);
-        System.out.println(TOTAL_PRICE.format(totalBillDto.getTotalPrice(), numberFormat.format(totalBillDto.getTotalPrice())));
-
+        System.out.println(TOTAL_PRICE.format(totalBillDto.getTotalQuantity(), numberFormat.format(totalBillDto.getTotalPrice())));
+        System.out.println(DISCOUNT_WITH_PROMOTION.format(numberFormat.format(totalBillDto.getTotalPromotionDiscount())));
+        System.out.println(DISCOUNT_WITH_MEMBERSHIP.format(numberFormat.format(totalBillDto.getMemberShipDiscount())));
     }
 
 

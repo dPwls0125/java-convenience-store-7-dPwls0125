@@ -3,8 +3,8 @@ package store.domain;
 public class Product {
     private String name;
     private int price;
-    private int nonPromotionQuantity;
-    private int promotionQuantity;
+    private Integer nonPromotionQuantity;
+    private Integer promotionQuantity;
     private Promotion promotion;
 
     public Product(String name, int price, int nonPromotionQuantity, int promotionQuantity, Promotion promotion) {
@@ -19,7 +19,7 @@ public class Product {
         return this.name;
     }
 
-    public int getPrice(){
+    public Integer getPrice(){
         return this.price;
     }
     public int getPromotionQuantity(){
@@ -42,11 +42,15 @@ public class Product {
         return name;
     }
 
-    public int getNonPromotionQuantity() {
+    public Integer getNonPromotionQuantity() {
         return nonPromotionQuantity;
     }
 
     public Promotion getPromotion() {
         return promotion;
+    }
+
+    public void setPromotion(Promotion promotion) {
+        this.promotion = promotion;
     }
 }

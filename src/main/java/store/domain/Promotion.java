@@ -47,4 +47,7 @@ public class Promotion {
         return this.purchaseAmount;
     }
 
+    public String getPromotionName() {
+        return promotionName;
+    }
 }

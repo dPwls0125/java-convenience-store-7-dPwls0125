@@ -1,9 +1,17 @@
 package store;
 
-import store.domain.Purchase;
+import store.config.StorageConfig;
+import store.domain.Storage;
+import store.view.DisplayInventoryView;
 
 public class Application {
     public static void main(String[] args) {
-        Purchase purchase = new Purchase("콩나물", 0);
+        Storage storage = StorageConfig.loadStorage();
+        DisplayInventoryView displayInventoryView = new DisplayInventoryView(storage);
+        displayInventoryView.displayInventoryView();
+
+
+
+
     }
 }

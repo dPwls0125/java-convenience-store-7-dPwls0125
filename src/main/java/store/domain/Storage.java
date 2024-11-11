@@ -7,7 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Storage {
-    Map<String, Product> products = new HashMap<>();
+    private Map<String, Product> products = new HashMap<>();
+
 
     public void addProduct(String productName, Product product){
         checkProductNameDuplicated(productName);
@@ -35,6 +36,9 @@ public class Storage {
         }
     }
 
+    public Map<String, Product> getProducts() {
+        return products;
+    }
     public boolean productHasPromotion(String productName){
         return products.get(productName).hasPromotion();
     }
