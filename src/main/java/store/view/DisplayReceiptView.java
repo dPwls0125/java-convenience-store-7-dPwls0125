@@ -49,24 +49,24 @@ public class DisplayReceiptView {
     public void disPlayReceipt() {
         List<Purchase> products = customer.getPurchases();
         List<BillPerProduct> billPerProducts = customer.getBillPerProducts();
-        printPurchasedProductInfos(products);
+        printPurchasedProductInfos(billPerProducts);
         printGiveAway(billPerProducts);
         printResult(billPerProducts);
     }
 
-    private void printPurchasedProductInfos(List<Purchase> purchases) {
-        System.out.println(START_RECEIPT_DIVIDER);
-        System.out.println(COLOUMN);
-        for (Purchase purchase : purchases) {
-            Product product = purchase.getProduct();
-            String price = numberFormat.format(purchase.getPrice());
-            int quantity = purchase.getQuantity();
+    private void printPurchasedProductInfos(List<BillPerProduct> bills) {
+        System.out.println(START_RECEIPT_DIVIDER.message);
+        System.out.println(COLOUMN.message);
+        for (BillPerProduct purchase : bills) {
+            Product product = purchase.getPurchase().getProduct();
+            String price = numberFormat.format(purchase.getPurchase().getPrice());
+            int quantity = purchase.getPurchase().getQuantity();
             System.out.println(COLUMN_VALUE.format(product.getProductName(),quantity, price));
         }
     }
 
     private void printGiveAway(List<BillPerProduct> billPerProducts) {
-        System.out.println(GIVE_AWAY_DIVIDER);
+        System.out.println(GIVE_AWAY_DIVIDER.message);
         for (BillPerProduct bill : billPerProducts) {
             checkAndPrintGiveAwayQuantityPerProduct(bill, bill.getPurchase());
         }
