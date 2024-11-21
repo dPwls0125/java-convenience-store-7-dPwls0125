@@ -24,6 +24,10 @@ public class Promotion {
         validate();
     }
 
+    public int getQuantityInOneSet(){
+        return extraAmount + purchaseAmount;
+    }
+
     private void validate(){
         validateDate();
         validateStartDate();

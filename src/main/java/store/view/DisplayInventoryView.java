@@ -6,12 +6,14 @@ import store.domain.Storage;
 
 import java.text.NumberFormat;
 import java.util.Map;
+
 import static store.view.DisplayInventoryView.Inventory.*;
 
 public class DisplayInventoryView {
     private Storage storage;
     NumberFormat numberFormat = NumberFormat.getInstance();
-    enum Inventory{
+
+    enum Inventory {
         WELCOME("안녕하세요. W편의점입니다."),
         PRONOUNCE_MENU("현재 보유하고 있는 상품입니다."),
         NON_PROMOTION_PRODUCT_STORAGE_INFO("- %s %s원 %s"),
@@ -19,39 +21,41 @@ public class DisplayInventoryView {
         DEPLETED_PRODUCT("재고 없음");
         private String message;
 
-        Inventory(String message){
+        Inventory(String message) {
             this.message = message;
         }
 
-        public String getMessage(){
+        public String getMessage() {
             return message;
         }
 
-        public String formatMessage(Object... args){
+        public String formatMessage(Object... args) {
             return String.format(message, args);
         }
     }
 
-    public DisplayInventoryView(Storage storage){
+    public DisplayInventoryView(Storage storage) {
         this.storage = storage;
     }
-    public void displayInventoryView(){
+
+    public void displayInventoryView() {
         printWelcomeMessage();
         printPronounceMenu();
     }
-    private void printWelcomeMessage(){
+
+    private void printWelcomeMessage() {
         System.out.println(WELCOME.getMessage());
     }
-    private void printPronounceMenu(){
+
+    private void printPronounceMenu() {
         Map<String, Product> products = storage.getProducts();
         System.out.println(PRONOUNCE_MENU.getMessage());
         System.out.println();
-        for(String key : products.keySet()){
+        for (String key : products.keySet()) {
             Product product = products.get(key);
             printBothOfNonPromotionAndPromotion(product);
         }
     }
-
 
     private void printBothOfNonPromotionAndPromotion(Product product) {
 
@@ -59,18 +63,18 @@ public class DisplayInventoryView {
         if (product.hasPromotion()) {
             Promotion promotion = product.getPromotion();
             String quantity = fomatQuantity(product.getPromotionQuantity());
-            System.out.println(PROMOTION_PRODUCT_STORAGE_INFO.formatMessage(product.getProductName(), price, quantity,promotion.getPromotionName()));
+            System.out.println(PROMOTION_PRODUCT_STORAGE_INFO.formatMessage(product.getProductName(), price, quantity, promotion.getPromotionName()));
         }
-        if(product.getNonPromotionQuantity() != null){
+        if (product.getNonPromotionQuantity() != null) {
             String quantity = fomatQuantity(product.getNonPromotionQuantity());
-            System.out.println(NON_PROMOTION_PRODUCT_STORAGE_INFO.formatMessage(product.getProductName(),price,quantity));
+            System.out.println(NON_PROMOTION_PRODUCT_STORAGE_INFO.formatMessage(product.getProductName(), price, quantity));
         }
     }
 
-    private String fomatQuantity(int quantity){
-        if(quantity == 0){
+    private String fomatQuantity(int quantity) {
+        if (quantity == 0) {
             return DEPLETED_PRODUCT.getMessage();
         }
-        return String.valueOf(quantity)+"개";
+        return String.valueOf(quantity) + "개";
     }
 }

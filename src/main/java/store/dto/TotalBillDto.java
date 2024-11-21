@@ -4,16 +4,16 @@ public class TotalBillDto {
     private int totalQuantity;
     private int totalPrice;
     private int totalPromotionDiscount;
-    private int memberShipDiscount;
+    private boolean memberShipDiscount;
     private int finalPrice;
-    private TotalBillDto(int totalQuantity,int totalPrice, int totalPromotionDiscount, int memberShipDiscount, int finalPrice) {
+    private TotalBillDto(int totalQuantity,int totalPrice, int totalPromotionDiscount, boolean memberShipDiscount, int finalPrice) {
         this.totalQuantity = totalQuantity;
         this.totalPrice = totalPrice;
         this.totalPromotionDiscount = totalPromotionDiscount;
         this.memberShipDiscount = memberShipDiscount;
         this.finalPrice = finalPrice;
     }
-    public static TotalBillDto of(int totalQuantity,int totalPrice, int totalPromotionDiscount, int memberShipDiscount, int finalPrice){
+    public static TotalBillDto of(int totalQuantity,int totalPrice, int totalPromotionDiscount, boolean memberShipDiscount, int finalPrice){
         return new TotalBillDto(totalQuantity,totalPrice, totalPromotionDiscount, memberShipDiscount, finalPrice);
     }
 
@@ -33,11 +33,11 @@ public class TotalBillDto {
         this.totalPromotionDiscount = totalPromotionDiscount;
     }
 
-    public int getMemberShipDiscount() {
+    public boolean getMemberShipDiscount() {
         return memberShipDiscount;
     }
 
-    public void setMemberShipDiscount(int memberShipDiscount) {
+    public void setMemberShipDiscount(boolean memberShipDiscount) {
         this.memberShipDiscount = memberShipDiscount;
     }
 

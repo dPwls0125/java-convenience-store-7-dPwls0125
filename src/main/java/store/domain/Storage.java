@@ -16,10 +16,9 @@ public class Storage {
         products.remove(productName);
     }
 
-    public void getProduct(){
-        for(String key : products.keySet()){
-            System.out.println(products.get(key).getProductName());
-        }
+    public Product getProduct(String productName){
+        isProductExist(productName);
+        return products.get(productName);
     }
 
     private void isProductExist(String productName){

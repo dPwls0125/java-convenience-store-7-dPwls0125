@@ -22,9 +22,6 @@ public class Product {
     public Integer getPrice(){
         return this.price;
     }
-    public int getPromotionQuantity(){
-        return this.promotionQuantity;
-    }
 
     public void setNonPromotionQuantity(int quantity){
         this.nonPromotionQuantity = quantity;
@@ -46,11 +43,30 @@ public class Product {
         return nonPromotionQuantity;
     }
 
+    public int getPromotionQuantity(){
+        if(promotionQuantity == null) return 0;
+        return this.promotionQuantity;
+    }
+
+    public int getTotalQuantity(){return getNonPromotionQuantity() + getPromotionQuantity();}
+
     public Promotion getPromotion() {
         return promotion;
     }
 
     public void setPromotion(Promotion promotion) {
         this.promotion = promotion;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("productName: " + this.name + "\n");
+        sb.append("productPrice: " + this.price + "\n");
+        sb.append("nonPromotion quantity: " + this.nonPromotionQuantity+ "\n");
+        sb.append("promotion quantity: " + this.promotionQuantity + "\n");
+        sb.append("promotion: " + this.promotion.getPromotionName() + "\n");
+
+        return sb.toString();
     }
 }
