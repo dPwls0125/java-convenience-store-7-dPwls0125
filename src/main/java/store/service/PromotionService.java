@@ -6,11 +6,15 @@ import store.domain.Promotion;
 import store.domain.Storage;
 import store.dto.AvailableStockDto;
 import store.dto.BonusQuantityAndPriceDto;
+import store.dto.PurchaseStockDto;
 
 import java.util.Map;
 
 public class PromotionService {
     Storage storage;
+    public PromotionService(Storage storage){
+        this.storage = storage;
+    }
     // 구매를 원하는 상품에 대한 프로모션 존재 여부 확인
     public boolean IsPromotionExist(Product product){
         Promotion promotion = product.getPromotion();
@@ -76,9 +80,23 @@ public class PromotionService {
                 availableNonPromotionStock + availablePromotionStock);
     }
 
-    public void updateStorage(AvailableStockDto dto, Product product){
-        product.setNonPromotionQuantity(product.getNonPromotionQuantity() - dto.getAvailableStockForNonPromotion());
-        product.setPromotionQuantity(product.getPromotionQuantity()-dto.getAvailableStockForPromotion());
+    public int calculateAppliedPromotionQuantity(Product product, int availablePromotionQuantity){
+        Promotion promotion = product.getPromotion();
+        int promotionQuantityPerSet = promotion.getQuantityInOneSet();
+        return (availablePromotionQuantity / promotionQuantityPerSet)  * promotionQuantityPerSet;
+    }
+
+    public int calculateGiveAwayQuantity(Product product ,int availablePromotionQuantity ){
+        Promotion promotion = product.getPromotion();
+        int promotionQuantityPerSet = promotion.getQuantityInOneSet();
+        int numberOfSet = availablePromotionQuantity / promotionQuantityPerSet;
+        return numberOfSet * promotion.getExtraAmount();
+    }
+
+
+    public void updateStorage(PurchaseStockDto dto, Product product){
+        product.setNonPromotionQuantity(product.getNonPromotionQuantity() - dto.getPurchasedQuantityInRegular());
+        product.setPromotionQuantity(product.getPromotionQuantity()-dto.getPurchasedQuantityInPromotion());
     }
 
     public BonusQuantityAndPriceDto getAppliedBonusQuanityAndPrice(int quantityWhichPurchasedInPromotionStock, Product product ){
@@ -88,7 +106,6 @@ public class PromotionService {
         return new BonusQuantityAndPriceDto(bonusQuantity, bonusQuantity * product.getPrice());
     }
 
-    public PromotionService(Storage storage){
-        this.storage = storage;
-    }
+
+
 }

@@ -1,6 +1,5 @@
 package store.domain;
 
-import store.dto.BillPerProductDto;
 import store.exception.PurchaseException;
 
 
@@ -11,18 +10,18 @@ import static store.constant.PurchaseErrorMessage.DUPLICATE_PRODUCT_NAME;
 import static store.constant.PurchaseErrorMessage.OUT_OF_STOCK;
 
 public class Customer {
-    private static final List<Purchase> purchases = new ArrayList<Purchase>();
+    private static final List<Purchase> shoppingCart = new ArrayList<Purchase>();
     private static final List<BillPerProduct> billPerProducts = new ArrayList<BillPerProduct>();
     private boolean applicateMembership;
 
     public void addPurchase(Purchase purchase) {
         checkDuplicatePurchase(purchase);
         validateStock(purchase);
-        purchases.add(purchase);
+        shoppingCart.add(purchase);
     }
 
     public List<Purchase> getPurchases() {
-        return purchases;
+        return shoppingCart;
     }
 
     public void addBillForProducts(BillPerProduct bill) {
@@ -30,14 +29,14 @@ public class Customer {
     }
 
     public void printPurchaseList() {
-        for (Purchase p: purchases) {
+        for (Purchase p: shoppingCart) {
             System.out.println(p);
         }
     }
 
 
     private void checkDuplicatePurchase(Purchase purchase) {
-        for (Purchase p : purchases) {
+        for (Purchase p : shoppingCart) {
             if (p.getProductName().equals(purchase.getProductName())) {
                 throw PurchaseException.from(DUPLICATE_PRODUCT_NAME);
             }

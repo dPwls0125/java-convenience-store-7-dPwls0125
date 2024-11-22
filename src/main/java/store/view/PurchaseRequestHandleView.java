@@ -3,6 +3,7 @@ package store.view;
 import camp.nextstep.edu.missionutils.Console;
 import store.domain.*;
 import store.dto.AvailableStockDto;
+import store.dto.PurchaseStockDto;
 import store.exception.PurchaseException;
 
 import store.service.PromotionService;
@@ -12,10 +13,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static store.constant.PurchaseErrorMessage.*;
-import static store.view.InputView.Menual.*;
+import static store.view.PurchaseRequestHandleView.Menual.*;
 
 // todo: 클래스 이름 더 직관적으로 변경
-public class InputView {
+public class PurchaseRequestHandleView {
     PurchaseService purchaseService;
     PromotionService promotionService;
     enum Menual{
@@ -37,7 +38,7 @@ public class InputView {
         }
     }
 
-    public InputView(Storage storage){
+    public PurchaseRequestHandleView(Storage storage){
         this.purchaseService = new PurchaseService(storage);
         this.promotionService = new PromotionService(storage);
     }
@@ -83,26 +84,48 @@ public class InputView {
     public void applyPromotion(Customer customer){
 
         for (Purchase p : customer.getPurchases()){
+//            System.out.println("PurchaseRequestHandlerView-applayPromotion: "+p.getProductName());
             Product product = p.getProduct();
             // 프로모션이 없는 경우
             if (p.getProduct().getPromotion() == null) {
-                AvailableStockDto dto = promotionService.getAvailableStorage(product.getProductName(),p.getQuantity());
-                promotionService.updateStorage(dto,product);
+                AvailableStockDto availableStockDto = promotionService.getAvailableStorage(product.getProductName(),p.getQuantity());
+                PurchaseStockDto purchaseStockDto = PurchaseStockDto.of(availableStockDto.getAvailableStockForNonPromotion(), availableStockDto.getAvailableStockForPromotion());
+                promotionService.updateStorage(purchaseStockDto,product);
                 // TODO bills 추가
+                BillPerProduct bill= new BillPerProduct(p,availableStockDto.getTotalAvailableStock(),0);
+                customer.addBillForProducts(bill);
                 continue;
             }
             // 프로모션이 있는 경우 적용
             askPromotionAndApplyExtra(p);
             AvailableStockDto dto = promotionService.getAvailableStorage(product.getProductName(), p.getQuantity());
-            if (dto.getAvailableStockForPromotion() < p.getQuantity()) {
-                if (inputYesOrNO(GUILD_ABOUT_PROMOTION2.formatMessage(p.getProductName(),dto.getAvailableStockForNonPromotion()))){
-                    dto.setAvailableStockForPromotion(dto.getAvailableStockForPromotion());
-                    promotionService.updateStorage(dto,product);
-                    // Todo : bills 추가
-                    return;
-                }
-                // todo: N: 정가로 결제해야하는 수량만큼 제외한 후 결제를 진행한다.
+            // 프로모션의 재고를 사용하더라도, 수량의 짝에 따라 promotion이 적용되지 않는 경우도 존재할 수 있음. 이에따라, promotion이 적용된 재고를 따로 계산
+            int purchaseQuantityInPromotion = promotionService.calculateAppliedPromotionQuantity(product,dto.getAvailableStockForPromotion());
+            int giveAwayQuantity = promotionService.calculateGiveAwayQuantity(product,purchaseQuantityInPromotion);
 
+            // 사고자 하는양이 프로모션이 적용되는 수량보다 적은 경우
+            if (purchaseQuantityInPromotion < p.getQuantity()) {
+                int pruchaseQuantityCannotInpromotion =  p.getQuantity() - purchaseQuantityInPromotion;
+                if (inputYesOrNO(GUILD_ABOUT_PROMOTION2.formatMessage(p.getProductName(),pruchaseQuantityCannotInpromotion))){
+                    PurchaseStockDto purchaseStockDto = PurchaseStockDto.of(dto.getAvailableStockForNonPromotion(), dto.getAvailableStockForPromotion());
+                    promotionService.updateStorage(purchaseStockDto,product);
+                    BillPerProduct bill= new BillPerProduct(p,dto.getTotalAvailableStock(),giveAwayQuantity);
+                    customer.addBillForProducts(bill);
+                }
+                else{
+                    // todo: N: 정가로 결제해야하는 수량만큼 제외한 후 결제를 진행한다.
+                    PurchaseStockDto purchaseStockDto = PurchaseStockDto.of(0,purchaseQuantityInPromotion);
+                    BillPerProduct bill= new BillPerProduct(p,purchaseQuantityInPromotion,giveAwayQuantity);
+                    promotionService.updateStorage(purchaseStockDto,product);
+                    customer.addBillForProducts(bill);
+                }
+            }
+            // 모든 수량을 프로모션 적용 할 수 있는 경우
+            if(purchaseQuantityInPromotion >= p.getQuantity()){
+                PurchaseStockDto purchaseStockDto = PurchaseStockDto.of(0,purchaseQuantityInPromotion);
+                BillPerProduct bill= new BillPerProduct(p,purchaseQuantityInPromotion,giveAwayQuantity);
+                promotionService.updateStorage(purchaseStockDto,product);
+                customer.addBillForProducts(bill);
             }
         }
     }
@@ -121,12 +144,9 @@ public class InputView {
         if (!isApplyExtra) {
             return;
         }
-
         // 구매 수량 증가
         purchase.setQuantity(purchase.getQuantity() + extraBonus);
     }
-
-
 
     private boolean inputYesOrNO(String ask){
         while(true){
@@ -142,6 +162,9 @@ public class InputView {
 
         }
     }
+
+
+
 
 
 //    public void displayPurchaseViewAndInput(){
