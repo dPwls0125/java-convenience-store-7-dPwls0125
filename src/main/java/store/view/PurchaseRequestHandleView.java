@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 import static store.constant.PurchaseErrorMessage.*;
 import static store.view.PurchaseRequestHandleView.Menual.*;
 
-// todo: 클래스 이름 더 직관적으로 변경
 public class PurchaseRequestHandleView {
     PurchaseService purchaseService;
     PromotionService promotionService;
@@ -81,6 +80,7 @@ public class PurchaseRequestHandleView {
         } while(matcher.find());
     }
 
+    // TODO : 아래 코드 중복을 리팩토링 해서 else 제거 하도록
     public void applyPromotion(Customer customer){
 
         for (Purchase p : customer.getPurchases()){
@@ -91,8 +91,7 @@ public class PurchaseRequestHandleView {
                 AvailableStockDto availableStockDto = promotionService.getAvailableStorage(product.getProductName(),p.getQuantity());
                 PurchaseStockDto purchaseStockDto = PurchaseStockDto.of(availableStockDto.getAvailableStockForNonPromotion(), availableStockDto.getAvailableStockForPromotion());
                 promotionService.updateStorage(purchaseStockDto,product);
-                // TODO bills 추가
-                BillPerProduct bill= new BillPerProduct(p,availableStockDto.getTotalAvailableStock(),0);
+                BillPerProduct bill = new BillPerProduct(p,availableStockDto.getTotalAvailableStock(),0);
                 customer.addBillForProducts(bill);
                 continue;
             }
@@ -108,22 +107,21 @@ public class PurchaseRequestHandleView {
                 int pruchaseQuantityCannotInpromotion =  p.getQuantity() - purchaseQuantityInPromotion;
                 if (inputYesOrNO(GUILD_ABOUT_PROMOTION2.formatMessage(p.getProductName(),pruchaseQuantityCannotInpromotion))){
                     PurchaseStockDto purchaseStockDto = PurchaseStockDto.of(dto.getAvailableStockForNonPromotion(), dto.getAvailableStockForPromotion());
+                    BillPerProduct bill = new BillPerProduct(p,dto.getTotalAvailableStock(),giveAwayQuantity);
                     promotionService.updateStorage(purchaseStockDto,product);
-                    BillPerProduct bill= new BillPerProduct(p,dto.getTotalAvailableStock(),giveAwayQuantity);
                     customer.addBillForProducts(bill);
                 }
-                else{
-                    // todo: N: 정가로 결제해야하는 수량만큼 제외한 후 결제를 진행한다.
+                else {
                     PurchaseStockDto purchaseStockDto = PurchaseStockDto.of(0,purchaseQuantityInPromotion);
-                    BillPerProduct bill= new BillPerProduct(p,purchaseQuantityInPromotion,giveAwayQuantity);
+                    BillPerProduct bill = new BillPerProduct(p,purchaseQuantityInPromotion,giveAwayQuantity);
                     promotionService.updateStorage(purchaseStockDto,product);
                     customer.addBillForProducts(bill);
                 }
             }
             // 모든 수량을 프로모션 적용 할 수 있는 경우
-            if(purchaseQuantityInPromotion >= p.getQuantity()){
+            if (purchaseQuantityInPromotion >= p.getQuantity()){
                 PurchaseStockDto purchaseStockDto = PurchaseStockDto.of(0,purchaseQuantityInPromotion);
-                BillPerProduct bill= new BillPerProduct(p,purchaseQuantityInPromotion,giveAwayQuantity);
+                BillPerProduct bill = new BillPerProduct(p,purchaseQuantityInPromotion,giveAwayQuantity);
                 promotionService.updateStorage(purchaseStockDto,product);
                 customer.addBillForProducts(bill);
             }
@@ -148,127 +146,20 @@ public class PurchaseRequestHandleView {
         purchase.setQuantity(purchase.getQuantity() + extraBonus);
     }
 
-    private boolean inputYesOrNO(String ask){
-        while(true){
+    private boolean inputYesOrNO(String ask) {
+
+        while (true) {
             try{
                 System.out.println(ask);
                 String input = Console.readLine();
-                if(input.equals("Y") ) return true;
-                if(input.equals("N")) return false;
-                else throw PurchaseException.from(PLEASE_ANSWER_YN);
-            }catch(PurchaseException e){
+                if (input.equals("Y") ) return true;
+                if (input.equals("N")) return false;
+                throw PurchaseException.from(PLEASE_ANSWER_YN);
+            } catch(PurchaseException e){
                 System.out.println(e.getMessage());
             }
 
         }
     }
-
-
-
-
-
-//    public void displayPurchaseViewAndInput(){
-//        System.out.println(Menual.GUID_THE_WAY_TO_PURCHASE.getMessage());
-//        getInputAboutPromotion();
-//        System.out.println(Menual.GUID_ABOUT_MEMBERSHIP.getMessage());
-//        getInputAboutMembership();
-//
-//    }
-//
-//    private void getInputAboutPromotion() {
-//        while(true){
-//            try{
-//                String input = Console.readLine();
-//                String[] purchaseInput = input.split(",");
-//                enrollPurchase(purchaseInput);
-//                break;
-//
-//            }catch (PurchaseException e){
-//                System.out.println(e.getMessage());
-//            }
-//        }
-//    }
-//
-//    private void getInputAboutMembership(){
-//        while(true){
-//            try{
-//                branchForYesOrNO();
-//                break;
-//            }catch (PurchaseException e){
-//                System.out.println(e.getMessage());
-//            }
-//        }
-//    }
-//
-//    private void branchForYesOrNO() {
-//        String input = Console.readLine();
-//        if(input.equals("Y")){
-//            customer.setApplicateMembership(true);
-//            return;
-//        }
-//        if(input.equals("N")){
-//            customer.setApplicateMembership(false);
-//            return;
-//        }
-//        throw PurchaseException.from(PELASE_ANSWER_YN);
-//    }
-//
-//    private void enrollPurchase(String[] purchaseInput) {
-//        for(String purchaseItem : purchaseInput){
-//            String line[] = purchaseItem.split("-");
-//            String productName = line[0].substring(1, line[0].length());
-//            String quantity = line[1].substring(0, line[1].length()-1);
-//            int extractQuantity = Integer.parseInt(quantity);
-//            checkExtraBonus(productName, extractQuantity);
-//        }
-//    }
-//
-//    private void checkExtraBonus(String productName, int extractQuantity) {
-//        Product product = storage.getProducts().get(productName);
-//        Purchase purchase = Purchase.of(product, extractQuantity);
-//        if(product.hasPromotion()) {
-//            Promotion promotion = product.getPromotion();
-//            int bonusQuantity = priceCalculator.calculatePromotionBonus(promotion, extractQuantity);
-//            branchFormPromotionAdoptation(purchase, bonusQuantity,extractQuantity);
-//        }
-//    }
-//
-//    private void branchFormPromotionAdoptation(Purchase purchase, int bonusQuantity, int quantity) {
-//        if (bonusQuantity > 0) {
-//            System.out.printf(Menual.GUID_ABOUT_PROMOTION1.forametMessage(purchase.getProductName(), bonusQuantity));
-//            askForPromotionAndSave(purchase.getProductName(), quantity);
-//        }
-//    }
-//
-//    private void askForPromotionAndSave(String productName, int quantity){
-//        String input = Console.readLine();
-//        Purchase purchase = Purchase.of(storage.getProducts().get(productName),quantity);
-//        customer.addPurchase(purchase);
-//        if(input.equals("N")){
-//            customer.addBillPerProductsForNonPromotion(purchase);
-//            return;
-//        }
-//        if(input.equals("Y")){
-//            customer.addBillPerProductsForPromotion(purchase);
-//            return;
-//        }
-//        throw PurchaseException.from(PELASE_ANSWER_YN);
-//    }
-//
-//    private String extractProductName(Matcher matcher) {
-//        if (matcher.find()) {
-//            String productName = matcher.group(1);
-//            return productName;
-//        }
-//        throw PurchaseException.from(INVALID_PRODUCT_NAME);
-//    }
-//
-//    private String extractQuantity(Matcher matcher){
-//        if (matcher.find()) {
-//            String quantity = matcher.group(2);
-//            return quantity;
-//        }
-//        throw PurchaseException.from(INVALID_PRODUCT_NAME);
-//    }
 
 }

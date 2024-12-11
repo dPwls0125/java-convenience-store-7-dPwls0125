@@ -1,5 +1,6 @@
 package store.dto;
 
+// Todo: 빌더 구현~
 public class TotalBillDto {
     private int totalQuantity;
     private int totalPrice;

@@ -55,6 +55,8 @@ public class DisplayReceiptView {
         boolean isApplyMembership = askAboutMembershipApplying();
         TotalBillDto dto = calculateBillService.getTotalBill(customer,isApplyMembership);
         List<BillPerProduct> bills = customer.getBillPerProducts();
+
+        // TODO : 프링트 로직을 하나의 메소드로 추출해서 호출
         printTotalPurchasedList(bills);
         printGiveAwayItemAndQuantity(bills);
         printTotalPurchasedAmount(dto);
@@ -119,7 +121,4 @@ public class DisplayReceiptView {
 
         }
     }
-
-
-
 }

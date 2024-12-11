@@ -106,6 +106,4 @@ public class PromotionService {
         return new BonusQuantityAndPriceDto(bonusQuantity, bonusQuantity * product.getPrice());
     }
 
-
-
 }

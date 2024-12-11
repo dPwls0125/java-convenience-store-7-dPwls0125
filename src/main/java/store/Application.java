@@ -37,7 +37,6 @@ public class Application {
             purchaseRequestHandleView.applyPromotion(customer);
 
             // 3. 구매 내역 계산 후 영수증 출력
-            // todo: 구현 예정
             displayReceiptView.displayReceipt();
             // -> 구매한 목록을 기반으로 가격 계산 후 출력
 
@@ -50,24 +49,3 @@ public class Application {
 
     }
 }
-//        // md 파일 파싱 후 Storage 로딩
-//        Storage storage = StorageConfig.loadStorage();
-//
-//        Customer customer = new Customer(); // 손님마다 다른 객체 생성해야 함
-//        DisplayInventoryView displayInventoryView = new DisplayInventoryView(storage);
-//        InputView inputView = new InputView(new PurchaseService(storage), new PromotionService(storage));
-//
-//        while (true) {
-//            // 재고 display
-//            displayInventoryView.displayInventoryView();
-//            // 구매를 원하는 상품 입력받고 저장
-//            inputView.inputPurchaseWantItemAndSave(customer);
-//            // 각 구매상품에 대한 프로모션 적용 확인 받고 bill 저장
-//
-//
-//            // Todo : 영수증 출력하고 purchase, bill list 초기화
-//
-//            // 종료 여부 묻기
-//            if (!inputView.askAboutMorePurchase()) break;
-//        }
-//

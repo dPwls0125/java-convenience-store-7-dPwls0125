@@ -62,19 +62,19 @@ public class DisplayInventoryView {
         String price = numberFormat.format(product.getPrice());
         if (product.hasPromotion()) {
             Promotion promotion = product.getPromotion();
-            String quantity = fomatQuantity(product.getPromotionQuantity());
+            String quantity = formatQuantity(product.getPromotionQuantity());
             System.out.println(PROMOTION_PRODUCT_STORAGE_INFO.formatMessage(product.getProductName(), price, quantity, promotion.getPromotionName()));
         }
         if (product.getNonPromotionQuantity() != null) {
-            String quantity = fomatQuantity(product.getNonPromotionQuantity());
+            String quantity = formatQuantity(product.getNonPromotionQuantity());
             System.out.println(NON_PROMOTION_PRODUCT_STORAGE_INFO.formatMessage(product.getProductName(), price, quantity));
         }
     }
 
-    private String fomatQuantity(int quantity) {
+    private String formatQuantity(int quantity) {
         if (quantity == 0) {
             return DEPLETED_PRODUCT.getMessage();
         }
-        return String.valueOf(quantity) + "개";
+        return quantity + "개";
     }
 }
